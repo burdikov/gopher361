@@ -34,11 +34,12 @@ bool XInputController::isStickDead(int stick)
 XInputController::XInputController(int userIndex)
 {
 	_userIndex = userIndex;
+	_state = XINPUT_STATE{};
 }
 
 // Calculates in which eighth the left stick currently is
 // 1st is on the top starting -22.5 degrees from y axis
-int XInputController::GetLeftStickDirection()
+int XInputController::getLeftStickDirection()
 {
 	if (isStickDead(STICK_LEFT)) {
 		return 0;
@@ -48,23 +49,48 @@ int XInputController::GetLeftStickDirection()
 	switch (eighth)
 	{
 	case 1:
-		return VK_PAD_LTHUMB_UP;
+		return LEFT_THUMB_UP;
 	case 2:
-		return VK_PAD_LTHUMB_UPRIGHT;
+		return LEFT_THUMB_UPRIGHT;
 	case 3:
-		return VK_PAD_LTHUMB_RIGHT;
+		return LEFT_THUMB_RIGHT;
 	case 4:
-		return VK_PAD_LTHUMB_DOWNRIGHT;
+		return LEFT_THUMB_DOWNRIGHT;
 	case 5:
-		return VK_PAD_LTHUMB_DOWN;
+		return LEFT_THUMB_DOWN;
 	case 6:
-		return VK_PAD_LTHUMB_DOWNLEFT;
+		return LEFT_THUMB_DOWNLEFT;
 	case 7:
-		return VK_PAD_LTHUMB_LEFT;
+		return LEFT_THUMB_LEFT;
 	case 8:
-		return VK_PAD_LTHUMB_UPLEFT;
-	default:
+		return LEFT_THUMB_UPLEFT;
+	}
+}
+
+int XInputController::getRightStickDirection() {
+	if (isStickDead(STICK_RIGHT)) {
 		return 0;
+	}
+
+	int eighth = (fmod(atan2(_state.Gamepad.sThumbRX, _state.Gamepad.sThumbRY) * 180 / PI + 382.5, 360) / 45 + 1);
+	switch (eighth)
+	{
+	case 1:
+		return RIGHT_THUMB_UP;
+	case 2:
+		return RIGHT_THUMB_UPRIGHT;
+	case 3:
+		return RIGHT_THUMB_RIGHT;
+	case 4:
+		return RIGHT_THUMB_DOWNRIGHT;
+	case 5:
+		return RIGHT_THUMB_DOWN;
+	case 6:
+		return RIGHT_THUMB_DOWNLEFT;
+	case 7:
+		return RIGHT_THUMB_LEFT;
+	case 8:
+		return RIGHT_THUMB_UPLEFT;
 	}
 }
 
@@ -79,14 +105,7 @@ XINPUT_STATE XInputController::GetState()
 	return _state;
 }
 
-//XINPUT_KEYSTROKE XInputController::GetKeystroke()
-//{
-//	XINPUT_KEYSTROKE a;
-//	int res = XInputGetKeystroke(_userIndex, 0, &a);
-//	if (res == ERROR_SUCCESS) {
-//		return a;
-//	}
-//	else {
-//		return XINPUT_KEYSTROKE();
-//	}
-//}
+long XInputController::GetLongState()
+{
+	return _state.Gamepad.wButtons + getLeftStickDirection() + getRightStickDirection();
+}
