@@ -39,58 +39,66 @@ XInputController::XInputController(int userIndex)
 
 // Calculates in which eighth the left stick currently is
 // 1st is on the top starting -22.5 degrees from y axis
-int XInputController::getLeftStickDirection()
+INT64 XInputController::getStickDirection(int stick)
 {
-	if (isStickDead(STICK_LEFT)) {
-		return 0;
+	if (isStickDead(stick)) {
+		return stick == STICK_LEFT ? LEFT_THUMB_REST : RIGHT_THUBM_REST;
 	}
 
-	int eighth = (fmod(atan2(_state.Gamepad.sThumbLX, _state.Gamepad.sThumbLY) * 180 / PI + 382.5, 360) / 45 + 1);
-	switch (eighth)
+	short x, y;
+	if (stick == STICK_LEFT) {
+		x = _state.Gamepad.sThumbLX;
+		y = _state.Gamepad.sThumbLY;
+	}
+	else {
+		x = _state.Gamepad.sThumbRX;
+		y = _state.Gamepad.sThumbRY;
+	}
+
+	int res{};
+	switch (_mode) {
+	case THUMB_MODE_FOURTHS:
+		res = fmod(atan2(x, y) * 180 / PI + 405, 360) / 90 + 1;
+		res = 2 * res - 1;
+		break;
+	case THUMB_MODE_EIGHTHS:
+		res = fmod(atan2(x, y) * 180 / PI + 382.5, 360) / 45 + 1;
+		break;
+	}
+
+	INT64 direction{};
+	switch (res)
 	{
 	case 1:
-		return LEFT_THUMB_UP;
+		direction = LEFT_THUMB_UP;
+		break;
 	case 2:
-		return LEFT_THUMB_UPRIGHT;
+		direction = LEFT_THUMB_UPRIGHT;
+		break;
 	case 3:
-		return LEFT_THUMB_RIGHT;
+		direction = LEFT_THUMB_RIGHT;
+		break;
 	case 4:
-		return LEFT_THUMB_DOWNRIGHT;
+		direction = LEFT_THUMB_DOWNRIGHT;
+		break;
 	case 5:
-		return LEFT_THUMB_DOWN;
+		direction = LEFT_THUMB_DOWN;
+		break;
 	case 6:
-		return LEFT_THUMB_DOWNLEFT;
+		direction = LEFT_THUMB_DOWNLEFT;
+		break;
 	case 7:
-		return LEFT_THUMB_LEFT;
+		direction = LEFT_THUMB_LEFT;
+		break;
 	case 8:
-		return LEFT_THUMB_UPLEFT;
-	}
-}
-
-int XInputController::getRightStickDirection() {
-	if (isStickDead(STICK_RIGHT)) {
-		return 0;
+		direction = LEFT_THUMB_UPLEFT;
 	}
 
-	int eighth = (fmod(atan2(_state.Gamepad.sThumbRX, _state.Gamepad.sThumbRY) * 180 / PI + 382.5, 360) / 45 + 1);
-	switch (eighth)
-	{
-	case 1:
-		return RIGHT_THUMB_UP;
-	case 2:
-		return RIGHT_THUMB_UPRIGHT;
-	case 3:
-		return RIGHT_THUMB_RIGHT;
-	case 4:
-		return RIGHT_THUMB_DOWNRIGHT;
-	case 5:
-		return RIGHT_THUMB_DOWN;
-	case 6:
-		return RIGHT_THUMB_DOWNLEFT;
-	case 7:
-		return RIGHT_THUMB_LEFT;
-	case 8:
-		return RIGHT_THUMB_UPLEFT;
+	if (stick == STICK_RIGHT) {
+		return direction << 12;
+	}
+	else {
+		return direction;
 	}
 }
 
@@ -105,7 +113,7 @@ XINPUT_STATE XInputController::GetState()
 	return _state;
 }
 
-long XInputController::GetLongState()
+INT64 XInputController::GetLongState()
 {
-	return _state.Gamepad.wButtons + getLeftStickDirection() + getRightStickDirection();
+	return _state.Gamepad.wButtons + getStickDirection(STICK_LEFT) + getStickDirection(STICK_RIGHT);
 }

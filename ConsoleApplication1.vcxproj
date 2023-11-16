@@ -129,10 +129,12 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="KeyboardTranslator.cpp" />
+    <ClCompile Include="MouseTranslator.cpp" />
     <ClCompile Include="XInputController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KeyboardTranslator.h" />
+    <ClInclude Include="MouseTranslator.h" />
     <ClInclude Include="XInputController.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

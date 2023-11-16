@@ -7,60 +7,40 @@
 #include <ctgmath>
 #include <map>
 #include "XInputController.h"
+#include "KeyboardTranslator.h"
+#include "MouseTranslator.h"
 
 #pragma comment(lib, "Xinput.lib")
 
 int main()
 {
     XInputController controller(0);
+	KeyboardTranslator kbTranslator{};
+	MouseTranslator mTranslator{};
 
 	int counter = 0;
+
+	int sleep_time = 10;
+
 	while (true)
 	{
 		controller.UpdateState();
+		auto state = controller.GetState();
 
-		std::map<DWORD, WORD> bindings = {
-			{LEFT_THUMB_UP | XINPUT_GAMEPAD_A, 0x10},
-			{LEFT_THUMB_DOWN | XINPUT_GAMEPAD_A, 0x11},
-			{LEFT_THUMB_UP | XINPUT_GAMEPAD_B, 0x12},
-		};
+		mTranslator.MovePointer(state, sleep_time);
+		double * a = mTranslator.Scroll(state, sleep_time);
 
-		auto state = controller.GetLongState();
-
-		for (const auto& p : bindings) {
-			if ((p.first & state) == p.first) {
-				printf("%i ", p.second);
-				INPUT input{};
-				input.type = INPUT_KEYBOARD;
-				input.ki.wScan = p.second;
-				input.ki.dwFlags = KEYEVENTF_SCANCODE;
-				SendInput(1, &input, sizeof(INPUT));
+		if (a != nullptr) {
+			for (int i = 0; i < 2; i++) {
+				printf("%lf ", a[i]);
 			}
-
-			Sleep(3000);
-
-			INPUT input{};
-			input.type = INPUT_KEYBOARD;
-			input.ki.wScan = p.second;
-			input.ki.dwFlags = KEYEVENTF_SCANCODE | KEYEVENTF_KEYUP;
-			SendInput(1, &input, sizeof(INPUT));
-
-			INPUT input1{};
-			input1.type = INPUT_KEYBOARD;
-			input1.ki.wScan = 0x1c;
-			input1.ki.dwFlags = KEYEVENTF_SCANCODE;
-			SendInput(1, &input1, sizeof(INPUT));
-
-			Sleep(10);
-
-			INPUT input2{};
-			input2.type = INPUT_KEYBOARD;
-			input2.ki.wScan = 0x1c;
-			input2.ki.dwFlags = KEYEVENTF_SCANCODE | KEYEVENTF_KEYUP;
-			SendInput(1, &input2, sizeof(INPUT));
 		}
+
+		//auto state = controller.GetLongState();
 		
-		Sleep(3000);
+		//translator.UpdateKeys(state); // state = 16842752
+
+		Sleep(sleep_time);
 		std::cout << "\x1b[2K";
 		std::cout << "\r";
 	}

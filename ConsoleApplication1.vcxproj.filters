@@ -24,12 +24,18 @@
     <ClCompile Include="KeyboardTranslator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MouseTranslator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="XInputController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="KeyboardTranslator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseTranslator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
