@@ -2,6 +2,7 @@
 
 #include <Windows.h>
 #include <Xinput.h>
+#include "ControllerVibrator.h"
 
 constexpr auto STICK_LEFT = 0x0001;
 constexpr auto STICK_RIGHT = 0x0002;
@@ -16,7 +17,7 @@ constexpr auto LEFT_THUMB_DOWNLEFT = (INT64)0x40 << 16;
 constexpr auto LEFT_THUMB_LEFT = (INT64)0x80 << 16;
 constexpr auto LEFT_THUMB_UPLEFT = (INT64)0x100 << 16;
 
-constexpr auto RIGHT_THUBM_REST = (INT64)0x1 << 28;
+constexpr auto RIGHT_THUMB_REST = (INT64)0x1 << 28;
 constexpr auto RIGHT_THUMB_UP = (INT64)0x2 << 28;
 constexpr auto RIGHT_THUMB_UPRIGHT = (INT64)0x4 << 28;
 constexpr auto RIGHT_THUMB_RIGHT = (INT64)0x8 << 28;
@@ -32,6 +33,8 @@ constexpr auto THUMB_MODE_EIGHTHS = 0x1;
 class XInputController
 {
 private:
+	
+
 	int _userIndex = 0;
 	int _mode = THUMB_MODE_EIGHTHS;
 
@@ -44,6 +47,8 @@ private:
 	bool isStickDead(int stick);
 public:
 	XInputController(int userIndex);
+
+	ControllerVibrator Vibrator;
 
 	void UpdateState();
 	XINPUT_STATE GetState();

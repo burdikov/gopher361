@@ -35,6 +35,8 @@ XInputController::XInputController(int userIndex)
 {
 	_userIndex = userIndex;
 	_state = XINPUT_STATE{};
+
+	Vibrator = ControllerVibrator(userIndex);
 }
 
 // Calculates in which eighth the left stick currently is
@@ -42,7 +44,7 @@ XInputController::XInputController(int userIndex)
 INT64 XInputController::getStickDirection(int stick)
 {
 	if (isStickDead(stick)) {
-		return stick == STICK_LEFT ? LEFT_THUMB_REST : RIGHT_THUBM_REST;
+		return stick == STICK_LEFT ? LEFT_THUMB_REST : RIGHT_THUMB_REST;
 	}
 
 	short x, y;

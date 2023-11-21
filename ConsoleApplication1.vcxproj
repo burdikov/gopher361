@@ -104,6 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -127,14 +128,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ControllerVibrator.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="KeyboardTranslator.cpp" />
     <ClCompile Include="MouseTranslator.cpp" />
+    <ClCompile Include="Profile.cpp" />
     <ClCompile Include="XInputController.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ControllerVibrator.h" />
     <ClInclude Include="KeyboardTranslator.h" />
     <ClInclude Include="MouseTranslator.h" />
+    <ClInclude Include="Profile.h" />
     <ClInclude Include="XInputController.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
