@@ -28,12 +28,12 @@ int main()
 	controller.Vibrator.Enable();
 
 	// default kb settings for now
-	Profile kb_no_mouse = Profile(nullptr, new KeyboardTranslator());
+	Profile kb_no_mouse = Profile(nullptr, new KeyboardTranslator(&controller));
 
 	// kb with mouse clicks
 	std::map<INT64, BindingInfo> mkb_bindings{};
-	mkb_bindings[XINPUT_GAMEPAD_A] = { false, VK_LBUTTON, false };
-	mkb_bindings[XINPUT_GAMEPAD_X] = { false, VK_RBUTTON, false };
+	mkb_bindings[XINPUT_GAMEPAD_A] = { .data = VK_LBUTTON, .isScanCode = false, .isTypematic = false };
+	mkb_bindings[XINPUT_GAMEPAD_X] = { .data = VK_RBUTTON, .isScanCode = false, .isTypematic = false };
 	auto mouse_kb_translator = new KeyboardTranslator(&mkb_bindings);
 
 	Profile mkb = Profile(new MouseTranslator(), mouse_kb_translator);

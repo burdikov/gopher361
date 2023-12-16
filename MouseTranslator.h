@@ -6,7 +6,7 @@
 class MouseTranslator
 {
 private:
-	short _sens = 1200;
+	short _sens = 1600;
 	short _dead_zone = 3000;
 	
 	// pixel accumulators

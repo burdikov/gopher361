@@ -17,5 +17,9 @@ public:
 
 	void ProfileSwitch();
 	void Enable();
+
+	void StikiePressed();
+	void StikieStuck();
+	void StikieReleased();
 };
 
